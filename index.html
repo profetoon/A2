@@ -30,20 +30,20 @@
     .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(3, 30, 59, 0.15); }
 
     /* Custom Category Accent Bars */
-    .color-grammar { border-top: 4px solid #9b257d; }
-    .color-vocabulary { border-top: 4px solid #ff8b2d; }
-    .color-reading { border-top: 4px solid #064383; }
-    .color-writing { border-top: 4px solid #ffd840; }
-    .color-exercises { border-top: 4px solid #17c3a4; }
-    .color-conversation { border-top: 4px solid #8e7bff; }
+    .color-gramatica { border-top: 4px solid #9b257d; }
+    .color-vocabulario { border-top: 4px solid #ff8b2d; }
+    .color-leer { border-top: 4px solid #064383; }
+    .color-escribir { border-top: 4px solid #ffd840; }
+    .color-proyecto { border-top: 4px solid #17c3a4; }
+    .color-conversacion { border-top: 4px solid #8e7bff; }
 
     /* Custom Category Badge Styles */
-    .badge-grammar { background-color: rgba(155, 37, 125, 0.12); color: #9b257d; }
-    .badge-vocabulary { background-color: rgba(255, 139, 45, 0.15); color: #d96b00; }
-    .badge-reading { background-color: rgba(6, 67, 131, 0.12); color: #064383; }
-    .badge-writing { background-color: #ffd840; color: #031e3b; font-weight: 800; }
-    .badge-exercises { background-color: rgba(23, 195, 164, 0.15); color: #0f806b; }
-    .badge-conversation { background-color: rgba(142, 123, 255, 0.15); color: #5a43e0; }
+    .badge-gramatica { background-color: rgba(155, 37, 125, 0.12); color: #9b257d; }
+    .badge-vocabulario { background-color: rgba(255, 139, 45, 0.15); color: #d96b00; }
+    .badge-leer { background-color: rgba(6, 67, 131, 0.12); color: #064383; }
+    .badge-escribir { background-color: #ffd840; color: #031e3b; font-weight: 800; }
+    .badge-proyecto { background-color: rgba(23, 195, 164, 0.15); color: #0f806b; }
+    .badge-conversacion { background-color: rgba(142, 123, 255, 0.15); color: #5a43e0; }
 
     .task-card-border { border: 2px solid #ffd840 !important; border-top: 6px solid #064383 !important; }
     ::-webkit-scrollbar { width: 6px; }
@@ -211,12 +211,12 @@
         <div>
           <label class="block text-xs font-bold text-[#031e3b] uppercase tracking-wider mb-1">Categoría / Subtítulo</label>
           <select id="cardCategorySelect" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold mb-2">
-            <option value="Grammar">Grammar (#9b257d)</option>
-            <option value="Vocabulary">Vocabulary (#ff8b2d)</option>
-            <option value="Reading">Reading (#064383)</option>
-            <option value="Writing">Writing (#ffd840)</option>
-            <option value="Exercises">Exercises (#17c3a4)</option>
-            <option value="Conversation">Conversation (#8e7bff)</option>
+            <option value="Gramática">Gramática (#9b257d)</option>
+            <option value="Vocabulario">Vocabulario (#ff8b2d)</option>
+            <option value="Leer">Leer (#064383)</option>
+            <option value="Escribir">Escribir (#ffd840)</option>
+            <option value="Proyecto">Proyecto (#17c3a4)</option>
+            <option value="Conversación">Conversación (#8e7bff)</option>
             <option value="custom">-- Texto personalizado --</option>
           </select>
           <input type="text" id="cardCategory" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm" placeholder="O escribe una categoría personalizada">
@@ -233,12 +233,12 @@
         <div>
           <label class="block text-xs font-bold text-[#031e3b] uppercase tracking-wider mb-1">Color Destacado</label>
           <select id="cardColor" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold">
-            <option value="grammar">Grammar (#9b257d)</option>
-            <option value="vocabulary">Vocabulary (#ff8b2d)</option>
-            <option value="reading">Reading (#064383)</option>
-            <option value="writing">Writing (#ffd840)</option>
-            <option value="exercises">Exercises (#17c3a4)</option>
-            <option value="conversation">Conversation (#8e7bff)</option>
+            <option value="gramatica">Gramática (#9b257d)</option>
+            <option value="vocabulario">Vocabulario (#ff8b2d)</option>
+            <option value="leer">Leer (#064383)</option>
+            <option value="escribir">Escribir (#ffd840)</option>
+            <option value="proyecto">Proyecto (#17c3a4)</option>
+            <option value="conversacion">Conversación (#8e7bff)</option>
           </select>
         </div>
         <div id="activityLinkField" class="hidden">
@@ -279,23 +279,30 @@
     const JSONBIN_PUBLIC_READ_KEY = "$2a$10$POX3spbfBkFdjZT42HRXIeo77anB18GqIlFgeKcYVdmmxOpnQKuYa";
 
     const CATEGORY_COLOR_MAP = {
-      'grammar': { bar: 'color-grammar', badge: 'badge-grammar', colorKey: 'grammar' },
-      'vocabulary': { bar: 'color-vocabulary', badge: 'badge-vocabulary', colorKey: 'vocabulary' },
-      'reading': { bar: 'color-reading', badge: 'badge-reading', colorKey: 'reading' },
-      'writing': { bar: 'color-writing', badge: 'badge-writing', colorKey: 'writing' },
-      'exercises': { bar: 'color-exercises', badge: 'badge-exercises', colorKey: 'exercises' },
-      'conversation': { bar: 'color-conversation', badge: 'badge-conversation', colorKey: 'conversation' },
-      // Backward compatibility for old accents
-      'accent1': { bar: 'color-grammar', badge: 'badge-grammar', colorKey: 'grammar' },
-      'accent2': { bar: 'color-writing', badge: 'badge-writing', colorKey: 'writing' },
-      'accent3': { bar: 'color-reading', badge: 'badge-reading', colorKey: 'reading' }
+      'gramatica': { bar: 'color-gramatica', badge: 'badge-gramatica', colorKey: 'gramatica' },
+      'vocabulario': { bar: 'color-vocabulario', badge: 'badge-vocabulario', colorKey: 'vocabulario' },
+      'leer': { bar: 'color-leer', badge: 'badge-leer', colorKey: 'leer' },
+      'escribir': { bar: 'color-escribir', badge: 'badge-escribir', colorKey: 'escribir' },
+      'proyecto': { bar: 'color-proyecto', badge: 'badge-proyecto', colorKey: 'proyecto' },
+      'conversacion': { bar: 'color-conversacion', badge: 'badge-conversacion', colorKey: 'conversacion' },
+      
+      // Legacy translations & accent support
+      'grammar': { bar: 'color-gramatica', badge: 'badge-gramatica', colorKey: 'gramatica' },
+      'vocabulary': { bar: 'color-vocabulario', badge: 'badge-vocabulario', colorKey: 'vocabulario' },
+      'reading': { bar: 'color-leer', badge: 'badge-leer', colorKey: 'leer' },
+      'writing': { bar: 'color-escribir', badge: 'badge-escribir', colorKey: 'escribir' },
+      'exercises': { bar: 'color-proyecto', badge: 'badge-proyecto', colorKey: 'proyecto' },
+      'conversation': { bar: 'color-conversacion', badge: 'badge-conversacion', colorKey: 'conversacion' },
+      'accent1': { bar: 'color-gramatica', badge: 'badge-gramatica', colorKey: 'gramatica' },
+      'accent2': { bar: 'color-escribir', badge: 'badge-escribir', colorKey: 'escribir' },
+      'accent3': { bar: 'color-leer', badge: 'badge-leer', colorKey: 'leer' }
     };
 
     const DEFAULT_DATA = {
       config: { portalTitle: "Portal de Actividades", rootTitle: "Vista Principal", rootDesc: "Organización de tus temas en orden secuencial." },
       items: [
-        { id: 'root-1', parentId: null, type: 'folder', title: 'Módulo 1: Fundamentos', category: 'Grammar', description: 'Lecciones iniciales.', color: 'grammar', hidden: false, isTask: false },
-        { id: 'sub-1', parentId: 'root-1', type: 'activity', title: 'Actividad 1.1: Lectura Inicial', category: 'Reading', description: 'Revisa el documento.', color: 'reading', link: 'https://google.com', hidden: false, isTask: true }
+        { id: 'root-1', parentId: null, type: 'folder', title: 'Módulo 1: Fundamentos', category: 'Gramática', description: 'Lecciones iniciales.', color: 'gramatica', hidden: false, isTask: false },
+        { id: 'sub-1', parentId: 'root-1', type: 'activity', title: 'Actividad 1.1: Lectura Inicial', category: 'Leer', description: 'Revisa el documento.', color: 'leer', link: 'https://google.com', hidden: false, isTask: true }
       ]
     };
 
@@ -366,7 +373,9 @@
       const val = e.target.value;
       if (val !== 'custom') {
         cardCategoryInput.value = val;
-        document.getElementById('cardColor').value = val.toLowerCase();
+        // Normalize accents/case to map to color dropdown
+        const key = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        document.getElementById('cardColor').value = key;
       }
     });
 
@@ -577,8 +586,8 @@
     function buildCardElement(item, index) {
       const card = document.createElement('div');
       
-      const key = (item.color || 'reading').toLowerCase();
-      const styleConfig = CATEGORY_COLOR_MAP[key] || CATEGORY_COLOR_MAP['reading'];
+      const rawColor = (item.color || 'leer').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      const styleConfig = CATEGORY_COLOR_MAP[rawColor] || CATEGORY_COLOR_MAP['leer'];
 
       const isHidden = !!item.hidden;
       const isTask = !!item.isTask;
@@ -776,7 +785,10 @@
       }
 
       document.getElementById('cardDesc').value = item.description || '';
-      document.getElementById('cardColor').value = (item.color || 'reading').toLowerCase();
+      
+      const rawColorKey = (item.color || 'leer').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      document.getElementById('cardColor').value = rawColorKey;
+      
       document.getElementById('cardLink').value = item.link || '';
       cardHiddenCheckbox.checked = !!item.hidden;
       cardTaskCheckbox.checked = !!item.isTask;
@@ -821,9 +833,9 @@
       cardHiddenCheckbox.checked = false;
       cardTaskCheckbox.checked = false;
       
-      cardCategorySelect.value = 'Grammar';
-      cardCategoryInput.value = 'Grammar';
-      document.getElementById('cardColor').value = 'grammar';
+      cardCategorySelect.value = 'Gramática';
+      cardCategoryInput.value = 'Gramática';
+      document.getElementById('cardColor').value = 'gramatica';
       
       cardModal.classList.remove('hidden');
     }
