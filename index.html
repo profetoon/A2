@@ -28,9 +28,23 @@
     body { background-color: #ffffff; color: #031e3b; font-family: 'Source Sans 3', sans-serif; }
     .card-hover { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
     .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(3, 30, 59, 0.15); }
-    .accent-bar-1 { border-top: 4px solid #9b257d; }
-    .accent-bar-2 { border-top: 4px solid #ffd840; }
-    .accent-bar-3 { border-top: 4px solid #064383; }
+
+    /* Custom Category Accent Bars */
+    .color-grammar { border-top: 4px solid #9b257d; }
+    .color-vocabulary { border-top: 4px solid #ff8b2d; }
+    .color-reading { border-top: 4px solid #064383; }
+    .color-writing { border-top: 4px solid #ffd840; }
+    .color-exercises { border-top: 4px solid #17c3a4; }
+    .color-conversation { border-top: 4px solid #8e7bff; }
+
+    /* Custom Category Badge Styles */
+    .badge-grammar { background-color: rgba(155, 37, 125, 0.12); color: #9b257d; }
+    .badge-vocabulary { background-color: rgba(255, 139, 45, 0.15); color: #d96b00; }
+    .badge-reading { background-color: rgba(6, 67, 131, 0.12); color: #064383; }
+    .badge-writing { background-color: #ffd840; color: #031e3b; font-weight: 800; }
+    .badge-exercises { background-color: rgba(23, 195, 164, 0.15); color: #0f806b; }
+    .badge-conversation { background-color: rgba(142, 123, 255, 0.15); color: #5a43e0; }
+
     .task-card-border { border: 2px solid #ffd840 !important; border-top: 6px solid #064383 !important; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -109,9 +123,7 @@
         </div>
         <span id="tasksCountBadge" class="text-xs font-extrabold bg-[#064383] text-white px-3 py-1 rounded-full">0 Tareas</span>
       </div>
-      <div id="tasksBannerGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Cartas completas generadas dinámicamente -->
-      </div>
+      <div id="tasksBannerGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
 
     <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -195,13 +207,24 @@
             </label>
           </div>
         </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#031e3b] uppercase tracking-wider mb-1">Categoría / Subtítulo</label>
+          <select id="cardCategorySelect" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold mb-2">
+            <option value="Grammar">Grammar (#9b257d)</option>
+            <option value="Vocabulary">Vocabulary (#ff8b2d)</option>
+            <option value="Reading">Reading (#064383)</option>
+            <option value="Writing">Writing (#ffd840)</option>
+            <option value="Exercises">Exercises (#17c3a4)</option>
+            <option value="Conversation">Conversation (#8e7bff)</option>
+            <option value="custom">-- Texto personalizado --</option>
+          </select>
+          <input type="text" id="cardCategory" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm" placeholder="O escribe una categoría personalizada">
+        </div>
+
         <div>
           <label class="block text-xs font-bold text-[#031e3b] uppercase tracking-wider mb-1">Título</label>
           <input type="text" id="cardTitle" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-[#031e3b] uppercase tracking-wider mb-1">Categoría / Subtítulo</label>
-          <input type="text" id="cardCategory" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
         </div>
         <div>
           <label class="block text-xs font-bold text-[#031e3b] uppercase tracking-wider mb-1">Descripción</label>
@@ -210,9 +233,12 @@
         <div>
           <label class="block text-xs font-bold text-[#031e3b] uppercase tracking-wider mb-1">Color Destacado</label>
           <select id="cardColor" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold">
-            <option value="accent1">Púrpura Magenta (#9b257d)</option>
-            <option value="accent2">Amarillo (#ffd840)</option>
-            <option value="accent3" selected>Azul (#064383)</option>
+            <option value="grammar">Grammar (#9b257d)</option>
+            <option value="vocabulary">Vocabulary (#ff8b2d)</option>
+            <option value="reading">Reading (#064383)</option>
+            <option value="writing">Writing (#ffd840)</option>
+            <option value="exercises">Exercises (#17c3a4)</option>
+            <option value="conversation">Conversation (#8e7bff)</option>
           </select>
         </div>
         <div id="activityLinkField" class="hidden">
@@ -252,11 +278,24 @@
     const JSONBIN_BIN_ID = "6ac7433cac6210605a1ebba8";
     const JSONBIN_PUBLIC_READ_KEY = "$2a$10$POX3spbfBkFdjZT42HRXIeo77anB18GqIlFgeKcYVdmmxOpnQKuYa";
 
+    const CATEGORY_COLOR_MAP = {
+      'grammar': { bar: 'color-grammar', badge: 'badge-grammar', colorKey: 'grammar' },
+      'vocabulary': { bar: 'color-vocabulary', badge: 'badge-vocabulary', colorKey: 'vocabulary' },
+      'reading': { bar: 'color-reading', badge: 'badge-reading', colorKey: 'reading' },
+      'writing': { bar: 'color-writing', badge: 'badge-writing', colorKey: 'writing' },
+      'exercises': { bar: 'color-exercises', badge: 'badge-exercises', colorKey: 'exercises' },
+      'conversation': { bar: 'color-conversation', badge: 'badge-conversation', colorKey: 'conversation' },
+      // Backward compatibility for old accents
+      'accent1': { bar: 'color-grammar', badge: 'badge-grammar', colorKey: 'grammar' },
+      'accent2': { bar: 'color-writing', badge: 'badge-writing', colorKey: 'writing' },
+      'accent3': { bar: 'color-reading', badge: 'badge-reading', colorKey: 'reading' }
+    };
+
     const DEFAULT_DATA = {
       config: { portalTitle: "Portal de Actividades", rootTitle: "Vista Principal", rootDesc: "Organización de tus temas en orden secuencial." },
       items: [
-        { id: 'root-1', parentId: null, type: 'folder', title: 'Módulo 1: Fundamentos', category: 'Sección Principal', description: 'Lecciones iniciales.', color: 'accent3', hidden: false, isTask: false },
-        { id: 'sub-1', parentId: 'root-1', type: 'activity', title: 'Actividad 1.1: Lectura Inicial', category: 'Lectura', description: 'Revisa el documento.', color: 'accent2', link: 'https://google.com', hidden: false, isTask: true }
+        { id: 'root-1', parentId: null, type: 'folder', title: 'Módulo 1: Fundamentos', category: 'Grammar', description: 'Lecciones iniciales.', color: 'grammar', hidden: false, isTask: false },
+        { id: 'sub-1', parentId: 'root-1', type: 'activity', title: 'Actividad 1.1: Lectura Inicial', category: 'Reading', description: 'Revisa el documento.', color: 'reading', link: 'https://google.com', hidden: false, isTask: true }
       ]
     };
 
@@ -313,10 +352,22 @@
     const cardHiddenCheckbox = document.getElementById('cardHidden');
     const cardTaskCheckbox = document.getElementById('cardTask');
 
+    const cardCategorySelect = document.getElementById('cardCategorySelect');
+    const cardCategoryInput = document.getElementById('cardCategory');
+
     window.addEventListener('DOMContentLoaded', async () => {
       lucide.createIcons();
       updateAdminUI();
       await fetchCloudData();
+    });
+
+    // Auto sync category selector with input & color picker
+    cardCategorySelect.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val !== 'custom') {
+        cardCategoryInput.value = val;
+        document.getElementById('cardColor').value = val.toLowerCase();
+      }
     });
 
     async function fetchCloudData() {
@@ -525,17 +576,16 @@
 
     function buildCardElement(item, index) {
       const card = document.createElement('div');
-      let accentClass = 'accent-bar-3';
-      let badgeBg = 'bg-[#064383]/10 text-[#064383]';
-      if (item.color === 'accent1') { accentClass = 'accent-bar-1'; badgeBg = 'bg-[#9b257d]/10 text-[#9b257d]'; }
-      else if (item.color === 'accent2') { accentClass = 'accent-bar-2'; badgeBg = 'bg-[#ffd840] text-[#031e3b] font-bold'; }
+      
+      const key = (item.color || 'reading').toLowerCase();
+      const styleConfig = CATEGORY_COLOR_MAP[key] || CATEGORY_COLOR_MAP['reading'];
 
       const isHidden = !!item.hidden;
       const isTask = !!item.isTask;
 
       const taskClass = isTask ? 'task-card-border bg-amber-50/30 shadow-md' : (isHidden ? 'opacity-60 bg-slate-50 border-dashed' : 'bg-white');
 
-      card.className = `${taskClass} rounded-2xl p-6 border border-slate-200 card-hover flex flex-col justify-between relative cursor-pointer ${accentClass}`;
+      card.className = `${taskClass} rounded-2xl p-6 border border-slate-200 card-hover flex flex-col justify-between relative cursor-pointer ${styleConfig.bar}`;
 
       card.addEventListener('click', (e) => {
         if (e.target.closest('button')) return;
@@ -568,7 +618,7 @@
           <div class="flex items-center justify-between gap-2 mb-3">
             <div class="flex items-center gap-1.5 flex-wrap">
               ${taskBadge}
-              <span class="text-xs font-bold px-2.5 py-1 rounded-md ${badgeBg} uppercase tracking-wider">${item.category || (item.type === 'folder' ? 'Carpeta' : 'Actividad')}</span>
+              <span class="text-xs font-bold px-2.5 py-1 rounded-md ${styleConfig.badge} uppercase tracking-wider">${item.category || (item.type === 'folder' ? 'Carpeta' : 'Actividad')}</span>
               ${hiddenBadge}
             </div>
             ${adminControls}
@@ -714,9 +764,19 @@
       document.getElementById('cardId').value = item.id;
       document.getElementById('formModalTitle').innerText = 'Editar Carta';
       document.getElementById('cardTitle').value = item.title || '';
-      document.getElementById('cardCategory').value = item.category || '';
+      
+      const categoryVal = item.category || '';
+      cardCategoryInput.value = categoryVal;
+      
+      const matchingSelectOption = Array.from(cardCategorySelect.options).find(opt => opt.value.toLowerCase() === categoryVal.toLowerCase());
+      if (matchingSelectOption) {
+        cardCategorySelect.value = matchingSelectOption.value;
+      } else {
+        cardCategorySelect.value = 'custom';
+      }
+
       document.getElementById('cardDesc').value = item.description || '';
-      document.getElementById('cardColor').value = item.color || 'accent3';
+      document.getElementById('cardColor').value = (item.color || 'reading').toLowerCase();
       document.getElementById('cardLink').value = item.link || '';
       cardHiddenCheckbox.checked = !!item.hidden;
       cardTaskCheckbox.checked = !!item.isTask;
@@ -760,6 +820,11 @@
       activityLinkField.classList.add('hidden');
       cardHiddenCheckbox.checked = false;
       cardTaskCheckbox.checked = false;
+      
+      cardCategorySelect.value = 'Grammar';
+      cardCategoryInput.value = 'Grammar';
+      document.getElementById('cardColor').value = 'grammar';
+      
       cardModal.classList.remove('hidden');
     }
 
@@ -780,7 +845,7 @@
       const cardId = document.getElementById('cardId').value;
       const type = document.querySelector('input[name="cardType"]:checked').value;
       const title = document.getElementById('cardTitle').value;
-      const category = document.getElementById('cardCategory').value;
+      const category = cardCategoryInput.value;
       const description = document.getElementById('cardDesc').value;
       const color = document.getElementById('cardColor').value;
       const link = document.getElementById('cardLink').value;
